@@ -29,19 +29,19 @@ func (r *ElasticRepository) Close() {
 	// not implemented
 }
 
-func (r *ElasticRepository) Insert(ctx context.Context, meow domain.Meow) error {
+func (r *ElasticRepository) Insert(ctx context.Context, message domain.Message) error {
 	_, err := r.client.Index().
-		Index("meows").
-		Type("meow").
-		Id(meow.ID).
-		BodyJson(meow).
+		Index("messages").
+		Type("message").
+		Id(message.ID).
+		BodyJson(message).
 		Refresh("wait_for").Do(ctx)
 	return err
 }
 
-func (r *ElasticRepository) Search(ctx context.Context, query string, skip, take uint64) ([]domain.Meow, error) {
+func (r *ElasticRepository) Search(ctx context.Context, query string, skip, take uint64) ([]domain.Message, error) {
 	result, err := r.client.Search().
-		Index("meows").
+		Index("messages").
 		Query(
 			elastic.NewMultiMatchQuery(query, "body").
 				Fuzziness("3").
@@ -55,16 +55,16 @@ func (r *ElasticRepository) Search(ctx context.Context, query string, skip, take
 		return nil, err
 	}
 
-	var meows []domain.Meow
+	var messages []domain.Message
 	for _, hit := range result.Hits.Hits {
-		var meow domain.Meow
-		err = json.Unmarshal(*hit.Source, &meow)
+		var message domain.Message
+		err = json.Unmarshal(*hit.Source, &message)
 		if err != nil {
 			log.Println(err)
 		} else {
-			meows = append(meows, meow)
+			messages = append(messages, message)
 		}
 	}
 
-	return meows, nil
+	return messages, nil
 }
