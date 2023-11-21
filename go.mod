@@ -3,10 +3,12 @@ module github.com/cr00z/gocqrs
 go 1.20
 
 require (
+	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/nats-io/nats.go v1.31.0
 	github.com/olivere/elastic v6.2.37+incompatible
+	github.com/segmentio/ksuid v1.0.4
 )
 
 require (

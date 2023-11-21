@@ -9,9 +9,9 @@ import (
 )
 
 type NatsEventsStore struct {
-	nc              *nats.Conn
-	meowCreatedSub  *nats.Subscription
-	meowCreatedChan chan dtos.MeowCreatedMessage
+	nc          *nats.Conn
+	createdSub  *nats.Subscription
+	createdChan chan dtos.CreatedMessage
 }
 
 func NewNats(url string) (*NatsEventsStore, error) {
@@ -29,17 +29,17 @@ func (s *NatsEventsStore) Close() {
 		s.nc.Close()
 	}
 
-	if s.meowCreatedSub != nil {
-		s.meowCreatedSub.Unsubscribe()
+	if s.createdSub != nil {
+		s.createdSub.Unsubscribe()
 	}
-	close(s.meowCreatedChan)
+	close(s.createdChan)
 }
 
-func (s *NatsEventsStore) Publish(meow domain.Meow) error {
-	mes := &dtos.MeowCreatedMessage{
-		ID:        meow.ID,
-		Body:      meow.Body,
-		CreatedAt: meow.CreatedAt,
+func (s *NatsEventsStore) Publish(message domain.Message) error {
+	mes := &dtos.CreatedMessage{
+		ID:        message.ID,
+		Body:      message.Body,
+		CreatedAt: message.CreatedAt,
 	}
 	data, err := s.writeMessage(mes)
 	if err != nil {
@@ -49,12 +49,12 @@ func (s *NatsEventsStore) Publish(meow domain.Meow) error {
 }
 
 // Subscribe 1st case
-func (s *NatsEventsStore) Subscribe() (<-chan dtos.MeowCreatedMessage, error) {
+func (s *NatsEventsStore) Subscribe() (<-chan dtos.CreatedMessage, error) {
 	var err error
-	meowMsg := dtos.MeowCreatedMessage{}
+	newMsg := dtos.CreatedMessage{}
 	ch := make(chan *nats.Msg, 64)
-	s.meowCreatedChan = make(chan dtos.MeowCreatedMessage, 64)
-	s.meowCreatedSub, err = s.nc.ChanSubscribe(meowMsg.Key(), ch)
+	s.createdChan = make(chan dtos.CreatedMessage, 64)
+	s.createdSub, err = s.nc.ChanSubscribe(newMsg.Key(), ch)
 	if err != nil {
 		return nil, err
 	}
@@ -62,23 +62,23 @@ func (s *NatsEventsStore) Subscribe() (<-chan dtos.MeowCreatedMessage, error) {
 	go func() {
 		for {
 			msg := <-ch
-			s.readMessage(msg.Data, &meowMsg)
-			s.meowCreatedChan <- meowMsg
+			s.readMessage(msg.Data, &newMsg)
+			s.createdChan <- newMsg
 		}
 	}()
 
-	return s.meowCreatedChan, nil
+	return s.createdChan, nil
 }
 
 // On 2nd case - callback
-func (s *NatsEventsStore) On(f func(dtos.MeowCreatedMessage)) error {
-	meowMsg := dtos.MeowCreatedMessage{}
+func (s *NatsEventsStore) On(f func(dtos.CreatedMessage)) error {
+	newMsg := dtos.CreatedMessage{}
 	var err error
-	s.meowCreatedSub, err = s.nc.Subscribe(
-		meowMsg.Key(),
+	s.createdSub, err = s.nc.Subscribe(
+		newMsg.Key(),
 		func(msg *nats.Msg) {
-			s.readMessage(msg.Data, &meowMsg)
-			f(meowMsg)
+			s.readMessage(msg.Data, &newMsg)
+			f(newMsg)
 		})
 	return err
 }

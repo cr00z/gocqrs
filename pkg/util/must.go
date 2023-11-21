@@ -9,3 +9,11 @@ func Must[T any](f func() (T, error)) T {
 	}
 	return result
 }
+
+func MustStr[T any](f func(string) (T, error), param string) T {
+	result, err := f(param)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return result
+}

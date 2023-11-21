@@ -6,12 +6,12 @@ type Message interface {
 	Key() string
 }
 
-type MeowCreatedMessage struct {
+type CreatedMessage struct {
 	ID        string
 	Body      string
 	CreatedAt time.Time
 }
 
-func (m *MeowCreatedMessage) Key() string {
-	return "meow.created"
+func (m *CreatedMessage) Key() string {
+	return "message.created"
 }

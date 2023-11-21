@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-type Meow struct {
+type Message struct {
 	ID        string    `json:"id"`
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`

@@ -7,7 +7,7 @@ import (
 
 type EventStore interface {
 	Close()
-	Publish(meow domain.Meow) error
-	Subscribe(<-chan dtos.MeowCreatedMessage, error)
-	On(f func(dtos.MeowCreatedMessage)) error
+	Publish(message domain.Message) error
+	Subscribe() (<-chan dtos.CreatedMessage, error)
+	On(f func(dtos.CreatedMessage)) error
 }

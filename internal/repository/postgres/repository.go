@@ -27,29 +27,29 @@ func (r PostgresRepository) Close() {
 	r.db.Close()
 }
 
-func (r PostgresRepository) List(ctx context.Context, skip, take uint64) ([]domain.Meow, error) {
-	rows, err := r.db.Query("SELECT id, body, created_at FROM meows ORDER BY id DESC OFFSET $1 LIMIT $2",
+func (r PostgresRepository) List(ctx context.Context, skip, take uint64) ([]domain.Message, error) {
+	rows, err := r.db.Query("SELECT id, body, created_at FROM messages ORDER BY id DESC OFFSET $1 LIMIT $2",
 		skip, take)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var meows []domain.Meow
+	var messages []domain.Message
 	for rows.Next() {
-		meow := domain.Meow{}
-		err = rows.Scan(&meow.ID, meow.Body, meow.CreatedAt)
+		msg := domain.Message{}
+		err = rows.Scan(&msg.ID, msg.Body, msg.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
-		meows = append(meows, meow)
+		messages = append(messages, msg)
 	}
 
-	return meows, nil
+	return messages, nil
 }
 
-func (r PostgresRepository) Insert(ctx context.Context, meow domain.Meow) error {
-	_, err := r.db.Exec("INSERT INTO meows(id, body, created_at) VALUES($1, $2, $3)",
-		meow.ID, meow.Body, meow.CreatedAt)
+func (r PostgresRepository) Insert(ctx context.Context, msg domain.Message) error {
+	_, err := r.db.Exec("INSERT INTO messages(id, body, created_at) VALUES($1, $2, $3)",
+		msg.ID, msg.Body, msg.CreatedAt)
 	return err
 }

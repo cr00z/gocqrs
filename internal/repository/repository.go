@@ -7,15 +7,15 @@ import (
 
 type RepositoryBasic interface {
 	Close()
-	Insert(ctx context.Context, meow domain.Meow) error
+	Insert(ctx context.Context, msg domain.Message) error
 }
 
 type RepositoryLister interface {
 	RepositoryBasic
-	List(ctx context.Context, skip, take uint64) ([]domain.Meow, error)
+	List(ctx context.Context, skip, take uint64) ([]domain.Message, error)
 }
 
 type RepositorySearcher interface {
 	RepositoryBasic
-	Search(ctx context.Context, query string, skip, take uint64) ([]domain.Meow, error)
+	Search(ctx context.Context, query string, skip, take uint64) ([]domain.Message, error)
 }

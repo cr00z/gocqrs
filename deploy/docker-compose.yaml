@@ -5,8 +5,8 @@ services:
     build: "./postgres"
     restart: "always"
     environment:
-      POSTGRES_DB: "meower"
-      POSTGRES_USER: "meower"
+      POSTGRES_DB: "messager"
+      POSTGRES_USER: "messager"
       POSTGRES_PASSWORD: "123456"
 
   nats:
