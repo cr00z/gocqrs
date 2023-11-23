@@ -3,9 +3,10 @@ package elastic
 import (
 	"context"
 	"encoding/json"
+	"log"
+
 	"github.com/cr00z/gocqrs/internal/domain"
 	"github.com/olivere/elastic"
-	"log"
 )
 
 type ElasticRepository struct {

@@ -1,12 +1,13 @@
 package main
 
 import (
+	"log"
+
 	"github.com/cr00z/gocqrs/internal/controller/http/createhttp"
 	"github.com/cr00z/gocqrs/internal/controller/nats"
 	"github.com/cr00z/gocqrs/internal/repository/postgres"
 	"github.com/cr00z/gocqrs/pkg/config"
 	"github.com/cr00z/gocqrs/pkg/util"
-	"log"
 )
 
 func main() {

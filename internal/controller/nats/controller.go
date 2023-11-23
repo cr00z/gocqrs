@@ -3,6 +3,7 @@ package nats
 import (
 	"bytes"
 	"encoding/gob"
+
 	"github.com/cr00z/gocqrs/internal/domain"
 	"github.com/cr00z/gocqrs/internal/dtos"
 	"github.com/nats-io/nats.go"
@@ -30,7 +31,7 @@ func (s *NatsEventsStore) Close() {
 	}
 
 	if s.createdSub != nil {
-		s.createdSub.Unsubscribe()
+		_ = s.createdSub.Unsubscribe()
 	}
 	close(s.createdChan)
 }
@@ -62,7 +63,7 @@ func (s *NatsEventsStore) Subscribe() (<-chan dtos.CreatedMessage, error) {
 	go func() {
 		for {
 			msg := <-ch
-			s.readMessage(msg.Data, &newMsg)
+			_ = s.readMessage(msg.Data, &newMsg)
 			s.createdChan <- newMsg
 		}
 	}()
@@ -77,7 +78,7 @@ func (s *NatsEventsStore) On(f func(dtos.CreatedMessage)) error {
 	s.createdSub, err = s.nc.Subscribe(
 		newMsg.Key(),
 		func(msg *nats.Msg) {
-			s.readMessage(msg.Data, &newMsg)
+			_ = s.readMessage(msg.Data, &newMsg)
 			f(newMsg)
 		})
 	return err

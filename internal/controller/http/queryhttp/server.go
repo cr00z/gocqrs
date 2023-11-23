@@ -1,11 +1,12 @@
 package queryhttp
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/cr00z/gocqrs/internal/repository"
 	"github.com/cr00z/gocqrs/pkg/util"
 	"github.com/gorilla/mux"
-	"net/http"
-	"strconv"
 )
 
 type httpServer struct {

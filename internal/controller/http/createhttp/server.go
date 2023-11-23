@@ -1,16 +1,17 @@
 package createhttp
 
 import (
+	"html/template"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/cr00z/gocqrs/internal/controller"
 	"github.com/cr00z/gocqrs/internal/domain"
 	"github.com/cr00z/gocqrs/internal/repository"
 	"github.com/cr00z/gocqrs/pkg/util"
 	"github.com/gorilla/mux"
 	"github.com/segmentio/ksuid"
-	"html/template"
-	"log"
-	"net/http"
-	"time"
 )
 
 type httpServer struct {
