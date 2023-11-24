@@ -1,6 +1,7 @@
 package queryhttp
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -31,6 +32,7 @@ func NewHttpServer(pgRepo repository.RepositoryLister, elRepo repository.Reposit
 }
 
 func (s *httpServer) Start() error {
+	log.Println("query server started at :8080")
 	return http.ListenAndServe(":8080", s.router)
 }
 

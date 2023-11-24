@@ -1,3 +1,6 @@
+up:
+	docker compose up -d
+
 lint:
 	go install golang.org/x/tools/cmd/goimports@latest
 	goimports -w .

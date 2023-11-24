@@ -17,6 +17,7 @@ func main() {
 	hub := websock.NewHub()
 	go hub.Run()
 
+	log.Printf("Nats: %s", cfg.NatsUrl)
 	natsCtrl := util.MustStr(nats.NewNats, cfg.NatsUrl)
 	defer natsCtrl.Close()
 	util.Must(func() (any, error) {

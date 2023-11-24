@@ -35,6 +35,7 @@ func NewHttpServer(repo repository.RepositoryLister, ctrl controller.EventStore)
 }
 
 func (s *httpServer) Start() error {
+	log.Println("create server started at :8080")
 	return http.ListenAndServe(":8080", s.router)
 }
 

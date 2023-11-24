@@ -13,9 +13,11 @@ import (
 func main() {
 	cfg := util.Must(config.NewConfig)
 
+	log.Printf("Postgres: %s", cfg.PostgresDsn)
 	pgRepo := util.MustStr(postgres.NewPostgresRepository, cfg.PostgresDsn)
 	defer pgRepo.Close()
 
+	log.Printf("Nats: %s", cfg.NatsUrl)
 	natsCtrl := util.MustStr(nats.NewNats, cfg.NatsUrl)
 	defer natsCtrl.Close()
 

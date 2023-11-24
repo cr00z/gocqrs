@@ -7,11 +7,12 @@ import (
 )
 
 type config struct {
-	PostgresDB           string `envconfig:"POSTGRES_DB"`
-	PostgresUser         string `envconfig:"POSTGRES_USER"`
-	PostgresPassword     string `envconfig:"POSTGRES_PASSWORD"`
-	NatsAddress          string `envconfig:"NATS_ADDRESS"`
-	ElasticsearchAddress string `envconfig:"ELASTICSEARCH_ADDRESS"`
+	PostgresHost         string `envconfig:"POSTGRES_HOST"         default:"localhost:5432"`
+	PostgresDB           string `envconfig:"POSTGRES_DB"           default:"messages"`
+	PostgresUser         string `envconfig:"POSTGRES_USER"         default:"messages"`
+	PostgresPassword     string `envconfig:"POSTGRES_PASSWORD"     default:"password"`
+	NatsAddress          string `envconfig:"NATS_ADDRESS"          default:"localhost:4222"`
+	ElasticsearchAddress string `envconfig:"ELASTICSEARCH_ADDRESS" default:"localhost:9200"`
 }
 
 type Config struct {
@@ -28,9 +29,9 @@ func NewConfig() (*Config, error) {
 	}
 
 	return &Config{
-		PostgresDsn: fmt.Sprintf("postgres://%s:%s@postgres/%s?sslmode=disable",
-			config.PostgresUser, config.PostgresPassword, config.PostgresDB),
+		PostgresDsn: fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
+			config.PostgresUser, config.PostgresPassword, config.PostgresHost, config.PostgresDB),
 		NatsUrl:    fmt.Sprintf("nats://%s", config.NatsAddress),
-		ElasticUrl: fmt.Sprintf("https://%s", config.ElasticsearchAddress),
+		ElasticUrl: fmt.Sprintf("http://%s", config.ElasticsearchAddress),
 	}, nil
 }

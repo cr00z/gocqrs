@@ -22,6 +22,7 @@ func NewHttpServer(hub *websock.Hub) *httpServer {
 }
 
 func (s *httpServer) Start() error {
+	log.Println("push server started at :8080")
 	return http.ListenAndServe(":8080", nil)
 }
 

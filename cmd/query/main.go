@@ -19,12 +19,15 @@ func main() {
 
 	cfg := util.Must(config.NewConfig)
 
+	log.Printf("Postgres: %s", cfg.PostgresDsn)
 	pgRepo := util.MustStr(postgres.NewPostgresRepository, cfg.PostgresDsn)
 	defer pgRepo.Close()
 
+	log.Printf("Elastic: %s", cfg.ElasticUrl)
 	elRepo := util.MustStr(elastic.NewElasticRepository, cfg.ElasticUrl)
 	defer elRepo.Close()
 
+	log.Printf("Nats: %s", cfg.NatsUrl)
 	natsCtrl := util.MustStr(nats.NewNats, cfg.NatsUrl)
 	defer natsCtrl.Close()
 	util.Must(func() (any, error) {

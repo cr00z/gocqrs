@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"time"
+
+	"github.com/olivere/elastic/v6"
 
 	"github.com/cr00z/gocqrs/internal/domain"
-	"github.com/olivere/elastic"
 )
 
 type ElasticRepository struct {
@@ -17,6 +19,7 @@ func NewElasticRepository(url string) (*ElasticRepository, error) {
 	client, err := elastic.NewClient(
 		elastic.SetURL(url),
 		elastic.SetSniff(false),
+		elastic.SetHealthcheckTimeoutStartup(time.Second*20),
 	)
 	if err != nil {
 		return nil, err
